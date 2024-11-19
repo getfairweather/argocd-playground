@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-app
+  namespace: argocd  # Change this to your ArgoCD namespace if different
+spec:
+  project: default
+
+  # Source configuration
+  source:
+    repoURL: 'https://github.com/getfairweather/argocd-playground.git'  # Replace with your Git repo URL
+    targetRevision: main  # Branch name or commit SHA
+    path: manifests/nginx  # Path in the repo where the manifests are stored
+
+  # Destination cluster and namespace
+  destination:
+    server: 'https://kubernetes.default.svc'  # In-cluster Kubernetes API
+    namespace: default  # Namespace where nginx will be deployed
+
+  # Sync policy (automatic or manual)
+  syncPolicy:
+    automated:
+      prune: true  # Automatically removes resources no longer defined in Git
+      selfHeal: true  # Automatically syncs changes detected in the Git repo
